@@ -1,6 +1,8 @@
 package com.example.useradmin.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.useradmin.mapper.UserMapper;
 import com.example.useradmin.model.User;
 import org.springframework.stereotype.Service;
 
@@ -37,4 +39,13 @@ public interface UserService extends IService<User> {
      * @return 脱敏后的用户信息
      */
     User userLogin(String userAccount, String password, HttpServletRequest httpReq);
+
+
+    /**
+     * 用户脫敏返回
+     * @param user 用户
+     * @param
+     * @return
+     */
+    User getuserSafe(User user);
 }

@@ -22,3 +22,6 @@ mybatis-plus:
       configuration:
         log-impl: com.example.useradmin.service.impl.UserServiceImpl
         mapper-locations: classpath:src/main/resources/mapper/**.xml
+
+        session:
+          timeout: 86400 # session超时时间

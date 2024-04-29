@@ -20,6 +20,8 @@ import java.sql.Timestamp;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.useradmin.contant.userContant.USER_LOGIN_STATE;
+
 /**
 * @author Administrator
 * @description 针对表【user】的数据库操作Service实现
@@ -69,7 +71,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
 
 
-        Timestamp d= new Timestamp(System.currentTimeMillis());
+        Timestamp d= new Timestamp(System.currentTimeMillis());//注册时间设置
         newUser.setRestime(d);
 
         newUser.setPermissions(0);
@@ -105,35 +107,53 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
        //System.out.println(userMapper.exists(new QueryWrapper<User>().eq("AccountNumber",userAccount)));
        if(userMapper.exists(new QueryWrapper<User>().eq("AccountNumber",userAccount)))
        {//检验账户是否存在
-           System.out.println(1);
+
            QueryWrapper Wrapper=new QueryWrapper<User>().eq("AccountNumber",userAccount);
 
            if(userMapper.selectOne(Wrapper).getPassword().equals(SecureUtil.sha256(noise+password)) && userMapper.selectOne(Wrapper).getIsdelete().equals(0))
            {//密码检验及逻辑删除检验
-               System.out.println(2);
-               User user = new User();
-              // System.out.println(1);
 
-               user.setId(userMapper.selectOne(Wrapper).getId());//获取id
-               user.setStatus(userMapper.selectOne(Wrapper).getStatus());//获取状态
-               user.setPermissions(userMapper.selectOne(Wrapper).getPermissions());//获取权限
-               user.setAvatar(userMapper.selectOne(Wrapper).getAvatar());//获取头像
-               user.setNickname(userMapper.selectOne(Wrapper).getNickname());//获取昵称
-               user.setAccountnumber(userMapper.selectOne(Wrapper).getAccountnumber());//获取账户
-               user.setGender(userMapper.selectOne(Wrapper).getGender());//获取性别
+               User user= userMapper.selectOne(Wrapper);
+
+
+               User usersafe = getuserSafe(user);
+
 
 
                log.info("userLogin file,login success ");//打印日志
 
-               httpReq.getSession().setAttribute("user",user);//设置状态
+               httpReq.getSession().setAttribute(USER_LOGIN_STATE,usersafe);//设置状态
 
 
-               return user;
+               return usersafe;
            }
        }
-       System.out.println(3);
+
        return null;
    }
+
+
+    /**
+     * 用戶脫敏
+     * @param user
+     * @return
+     */
+
+    @Override
+    public User getuserSafe(User user)
+    {
+        User usersafe = new User();
+        usersafe.setId(user.getId());//获取id
+        usersafe.setStatus(user.getStatus());//获取状态
+        usersafe.setPermissions(user.getPermissions());//获取权限
+        usersafe.setAvatar(user.getAvatar());//获取头像
+        usersafe.setNickname(user.getNickname());//获取昵称
+        usersafe.setAccountnumber(user.getAccountnumber());//获取账户
+        usersafe.setGender(user.getGender());//获取性别
+
+        return usersafe;
+    }
+
 }
 
 

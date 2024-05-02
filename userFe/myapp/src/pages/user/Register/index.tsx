@@ -1,13 +1,13 @@
 import Footer from '@/components/Footer';
-import { login } from '@/services/ant-design-pro/api';
+import { register} from '@/services/ant-design-pro/api';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
-  AlipayCircleOutlined,
+
   LockOutlined,
   MobileOutlined,
-  TaobaoCircleOutlined,
+
   UserOutlined,
-  WeiboCircleOutlined,
+
 } from '@ant-design/icons';
 import {
   LoginForm,
@@ -20,8 +20,6 @@ import React, { useState } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl, useModel } from 'umi';
 import styles from './index.less';
 import {SYSTEM_LOGO} from "@/constants";
-import { Button } from 'antd';
-
 
 const LoginMessage: React.FC<{
   content: string;
@@ -36,7 +34,7 @@ const LoginMessage: React.FC<{
   />
 );
 
-const Login: React.FC = () => {
+const Register: React.FC = (body: API.LoginParams, options?: { [p: string]: any }) => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -53,14 +51,30 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: API.RegisterParams) => {
+
+    const  { password,checkPassword } = values;
+
+    if(password !== checkPassword){
+      message.error("两次密码输入不一致");
+      return;
+    }
+
+
+
     try {
+      // 注册
+      const id = await register(values);//传回id号
+
+
+     // const user = await login({ ...values, type });
+
+
       // 登录
-      const user = await login({ ...values, type });
-      if (user) {
+      if (id >= 0) {
         const defaultLoginSuccessMessage = intl.formatMessage({
-          id: 'pages.login.success',
-          defaultMessage: '登录成功！',
+          id: 'pages.register.success',
+          defaultMessage: '注册成功！',
         });
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
@@ -68,10 +82,14 @@ const Login: React.FC = () => {
         if (!history) return;
         const { query } = history.location;
         const { redirect } = query as { redirect: string };
-        history.push(redirect || '/');
+        history.push(redirect || '/user/login?redirect='+redirect);//注册完跳转回redirect直接请求的页面
         return;
+      }else {
+        throw new Error (`register error id = ${id}`);
       }
-      console.log(user);
+
+
+      //console.log(id);
       // 如果失败去设置用户错误信息
       //setUserLoginState(msg);
     } catch (error) {
@@ -98,33 +116,28 @@ const Login: React.FC = () => {
             autoLogin: true,
           }}
 
+          submitter={//重写提交按钮信息为：注册
+          {
+            searchConfig: {
+              submitText: '注册',
+            }
+          }
+          }
+
           onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
+            await handleSubmit(values as API.RegisterParams);
           }}
         >
           <Tabs activeKey={type} onChange={setType}>
             <Tabs.TabPane
               key="account"
               tab={intl.formatMessage({
-                id: 'pages.login.accountLogin.tab',
-                defaultMessage: '账户密码登录',
+                id: 'pages.register.accountLogin.tab',
+                defaultMessage: '账户密码注册',
               })}
             />
 
-            <Tabs.TabPane
-              key="register"
-              tab={
-                <Button onClick={() => location.href=("/user/register")} className="my-custom-button">
-                  {intl.formatMessage({
-                    id: 'pages.login.accountLogin.tab',
-                    defaultMessage: '账户密码注册',
-                  })}
-                </Button>
-              }
-            />
-
           </Tabs>
-
 
           {status === 'error' && loginType === 'account' && (
             <LoginMessage
@@ -134,8 +147,13 @@ const Login: React.FC = () => {
               })}
             />
           )}
+
+
           {type === 'account' && (
             <>
+
+
+
               <ProFormText
                 name="userAccount"
                 fieldProps={{
@@ -143,8 +161,8 @@ const Login: React.FC = () => {
                   prefix: <UserOutlined className={styles.prefixIcon} />,
                 }}
                 placeholder={intl.formatMessage({
-                  id: 'pages.login.username.placeholder',
-                  defaultMessage: '请输入账号',
+                  id: 'pages.register.username.placeholder',
+                  defaultMessage: '请输入注册账号',
                 })}
                 rules={[
                   {
@@ -157,7 +175,8 @@ const Login: React.FC = () => {
                     ),
                   },
                   {
-                    min: 4,
+                    //required: (length > 3),
+                    min : 4,
                     message: (
                       <FormattedMessage
                         id="pages.login.username.length"
@@ -167,6 +186,9 @@ const Login: React.FC = () => {
                   },
                 ]}
               />
+
+
+
               <ProFormText.Password
                 name="password"
                 fieldProps={{
@@ -174,8 +196,8 @@ const Login: React.FC = () => {
                   prefix: <LockOutlined className={styles.prefixIcon} />,
                 }}
                 placeholder={intl.formatMessage({
-                  id: 'pages.login.password.placeholder',
-                  defaultMessage: '请输入密码',
+                  id: 'pages.register.password.placeholder',
+                  defaultMessage: '请输入注册密码',
                 })}
                 rules={[
                   {
@@ -189,8 +211,40 @@ const Login: React.FC = () => {
                   },
                 ]}
               />
+
+
+
+              <ProFormText.Password
+                name="checkPassword"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined className={styles.prefixIcon} />,
+                }}
+                placeholder={intl.formatMessage({
+                  id: 'pages.register.checkpassword.placeholder',
+                  defaultMessage: '请输入注册密码',
+                })}
+                rules={[
+                  {
+                    required: true,
+                    message: (
+                      <FormattedMessage
+                        id="pages.login.checkpassword.required"
+                        defaultMessage="核对密码是必填项"
+                      />
+                    ),
+                  },
+                ]}
+              />
+
+
+
             </>
           )}
+
+
+
+
 
           {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
           {type === 'mobile' && (
@@ -297,4 +351,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Register;

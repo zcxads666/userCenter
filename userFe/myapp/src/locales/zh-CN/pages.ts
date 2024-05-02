@@ -6,6 +6,7 @@ export default {
   'pages.login.success': '登录成功！',
   'pages.login.username.placeholder': '请输入账号',
   'pages.login.username.required': '用户名是必填项！',
+  'pages.login.username.length': '用户名长度必须大于3！',
   'pages.login.password.placeholder': '请输入密码',
   'pages.login.password.required': '密码是必填项！',
   'pages.login.phoneLogin.tab': '手机号登录',

@@ -3,24 +3,18 @@
 
 declare namespace API {
   type CurrentUser = {
-    name?: string;
-    avatar?: string;
-    userid?: string;
-    email?: string;
-    signature?: string;
-    title?: string;
-    group?: string;
-    tags?: { key?: string; label?: string }[];
-    notifyCount?: number;
-    unreadCount?: number;
-    country?: string;
-    access?: string;
-    geographic?: {
-      province?: { label?: string; key?: string };
-      city?: { label?: string; key?: string };
-    };
-    address?: string;
-    phone?: string;
+
+    id : number;//获取id
+    status : number;//获取状态
+    permissions : number;//获取权限
+    avatar?: string;//获取头像
+    nickname?: string;//获取昵称
+    accountnumber?: string;//获取账户
+    gender?:number;//获取性别
+
+
+
+
   };
 
   type LoginResult = {

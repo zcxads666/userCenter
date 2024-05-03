@@ -114,12 +114,12 @@ const Login: React.FC = () => {
             <Tabs.TabPane
               key="register"
               tab={
-                <Button onClick={() => location.href=("/user/register")} className="my-custom-button">
+                <a href="/user/register" className="my-custom-button">
                   {intl.formatMessage({
-                    id: 'pages.login.accountLogin.tab',
+                    id: 'pages.register.accountLogin.tab',
                     defaultMessage: '账户密码注册',
                   })}
-                </Button>
+                </a>
               }
             />
 

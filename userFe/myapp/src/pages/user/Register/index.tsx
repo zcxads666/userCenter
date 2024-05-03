@@ -137,6 +137,18 @@ const Register: React.FC = (body: API.LoginParams, options?: { [p: string]: any 
               })}
             />
 
+            <Tabs.TabPane
+              key="register"
+              tab={
+                <a href="/user/login" className="my-custom-button">
+                  {intl.formatMessage({
+                    id: 'pages.loginagain.accountLogin.tab',
+                    defaultMessage: '返回登录',
+                  })}
+                </a>
+              }
+            />
+
           </Tabs>
 
           {status === 'error' && loginType === 'account' && (

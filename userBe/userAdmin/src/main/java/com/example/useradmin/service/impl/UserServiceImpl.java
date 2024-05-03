@@ -142,6 +142,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     public User getuserSafe(User user)
     {
+        if(user==null)return null;
+
         User usersafe = new User();
         usersafe.setId(user.getId());//获取id
         usersafe.setStatus(user.getStatus());//获取状态

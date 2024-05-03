@@ -12,6 +12,8 @@ import {RequestConfig} from "@@/plugin-request/request";
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const registerPath = '/user/register';
+
+const WHITE_LIST = [loginPath, registerPath];
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
   loading: <PageLoading />,
@@ -35,15 +37,16 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser();
-      return msg.data;
+      //const user = await queryCurrentUser();
+      return await queryCurrentUser();
     } catch (error) {
       history.push(loginPath);
     }
     return undefined;
   };
   // 如果不是登录页面，执行
-  if (history.location.pathname !== loginPath && history.location.pathname !== registerPath ) {
+  if (!WHITE_LIST.includes(history.location.pathname))//history.location.pathname !== loginPath && history.location.pathname !== registerPath )
+  {
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
@@ -63,7 +66,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.accountnumber,//页面上打水印
     },
     footerRender: () => <Footer />,
     onPageChange: () => {

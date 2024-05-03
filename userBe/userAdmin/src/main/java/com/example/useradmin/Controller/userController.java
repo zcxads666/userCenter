@@ -86,6 +86,31 @@ public class userController {
     }
 
 
+    @GetMapping("/current")//获取用户登录状态
+    public User getCurrentUser(HttpServletRequest request)
+    {
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        User currentUser = (User) userObj;
+        if(currentUser == null)
+        {
+            return null;
+        }
+
+        long userId = currentUser.getId();//重新查询，防止数据库数据被修改，缓存更新缓慢导致数据展现不及时
+
+        User byId = userService.getById(userId);
+
+//        if(byId.getStatus()==1)
+//        {
+//            byId.setStatus(0);
+//            return ;
+//        }
+
+        User user = userService.getuserSafe(byId);
+
+        return user;
+    }
+
 
 
     @GetMapping("/search")//查询

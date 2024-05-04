@@ -161,6 +161,9 @@ public class userController {
     @PostMapping("/logout")//登出
     public boolean userLogout(HttpServletRequest request)
     {
+
+        if(request==null) return false;
+
         HttpSession session = request.getSession(false);
         if(session==null){
             return false;

@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.useradmin.common.ErrorCode;
+import com.example.useradmin.exception.BusinessException;
 import com.example.useradmin.mapper.UserMapper;
 import com.example.useradmin.model.User;
 import com.example.useradmin.service.UserService;
@@ -47,21 +49,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         //if(StreamUtils.isAllNotEmpty(userAccount,password,checkPassword))
         //if(ObjectUtils.isEmpty(userAccount||password||checkPassword))
         if(!StrUtil.isAllNotEmpty(userAccount,password,checkPassword)){
-            return -1;}//判空}
+            throw new BusinessException(ErrorCode.PARAMS_NULL);}//判空}
 
-        if(!password.equals(checkPassword)){return -1;}//密码一致校验
+        if(!password.equals(checkPassword)){throw new BusinessException(ErrorCode.PARAMS_ERROR,"密码不一致");}//密码一致校验
 
-        if(userAccount.length()<4||userAccount.length()>16){return -1;}//账号长度校验
+        if(userAccount.length()<4||userAccount.length()>16){throw new BusinessException(ErrorCode.PARAMS_ERROR,"账号长度错误");}//账号长度校验
 
-        if(password.length()<6||password.length()>16){return -1;}//密码长度校验
+        if(password.length()<6||password.length()>16){throw new BusinessException(ErrorCode.PARAMS_ERROR,"密码长度错误");}//密码长度校验
 
         Pattern pattern = Pattern.compile(ACCOUNT_PATTERN);
         Matcher matcher = pattern.matcher(userAccount);
-        if(!matcher.matches()){return -1;}//账号格式校验
+        if(!matcher.matches()){throw new BusinessException(ErrorCode.PARAMS_ERROR,"账号格式错误");}//账号格式校验
 
         QueryWrapper<User> wrapper = new QueryWrapper();
         wrapper.eq("AccountNumber",userAccount);//eq相当于==
-        if(userMapper.exists(wrapper)){return -1;}//重复账户检验
+        if(userMapper.exists(wrapper)){throw new BusinessException(ErrorCode.PARAMS_ERROR,"账号重复");}//重复账户检验
 
 
 
@@ -93,16 +95,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
    public User userLogin(String userAccount, String password, HttpServletRequest httpReq)
    {
        if(!StrUtil.isAllNotEmpty(userAccount,password)){
-           return null;}//判空}
+           throw new BusinessException(ErrorCode.PARAMS_NULL);}//判空}
 
 
-       if(userAccount.length()<4||userAccount.length()>16){return null;}//账号长度校验
+       if(userAccount.length()<4||userAccount.length()>16){throw new BusinessException(ErrorCode.PARAMS_ERROR,"账号长度错误");}//账号长度校验
 
-       if(password.length()<6||password.length()>16){return null;}//密码长度校验
+       if(password.length()<6||password.length()>16){throw new BusinessException(ErrorCode.PARAMS_ERROR,"密码长度错误");}//密码长度校验
 
        Pattern pattern = Pattern.compile(ACCOUNT_PATTERN);
        Matcher matcher = pattern.matcher(userAccount);
-       if(!matcher.matches()){return null;}//账号格式校验
+       if(!matcher.matches()){throw new BusinessException(ErrorCode.PARAMS_ERROR,"账号格式错误");}//账号格式校验
 
        //System.out.println(userMapper.exists(new QueryWrapper<User>().eq("AccountNumber",userAccount)));
        if(userMapper.exists(new QueryWrapper<User>().eq("AccountNumber",userAccount)))
@@ -142,7 +144,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     public User getuserSafe(User user)
     {
-        if(user==null)return null;
+        if(user==null)throw new BusinessException(ErrorCode.NO_AUTH,"请先登录");
 
         User usersafe = new User();
         usersafe.setId(user.getId());//获取id

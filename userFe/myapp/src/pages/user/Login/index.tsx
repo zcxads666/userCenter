@@ -20,7 +20,7 @@ import React, { useState } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl, useModel } from 'umi';
 import styles from './index.less';
 import {SYSTEM_LOGO} from "@/constants";
-import { Button } from 'antd';
+
 
 
 const LoginMessage: React.FC<{
@@ -57,6 +57,9 @@ const Login: React.FC = () => {
     try {
       // 登录
       const user = await login({ ...values, type });
+       console.log(user.code);
+       console.log(user.data);
+       console.log(user);
       if (user) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
@@ -79,7 +82,8 @@ const Login: React.FC = () => {
         id: 'pages.login.failure',
         defaultMessage: '登录失败，请重试！',
       });
-      message.error(defaultLoginFailureMessage);
+     // message.error(defaultLoginFailureMessage);
+      console.log(defaultLoginFailureMessage);
     }
   };
   const { status, type: loginType } = userLoginState;

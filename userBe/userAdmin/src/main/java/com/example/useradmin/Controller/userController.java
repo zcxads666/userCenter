@@ -3,7 +3,12 @@ package com.example.useradmin.Controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.example.useradmin.common.BaseResponse;
+import com.example.useradmin.common.ErrorCode;
+import com.example.useradmin.common.ResutUtils;
+import com.example.useradmin.exception.BusinessException;
 import com.example.useradmin.mapper.UserMapper;
 import com.example.useradmin.model.User;
 import com.example.useradmin.model.request.userLoginRequest;
@@ -46,7 +51,7 @@ public class userController {
     UserMapper userMapper ;
 
     @PostMapping("/register")//注册
-    public Long userRegister(@RequestBody userRegRequest userRegReq)
+    public BaseResponse<Long> userRegister(@RequestBody userRegRequest userRegReq)
         {
             if(userRegReq == null)return null;
 
@@ -55,19 +60,21 @@ public class userController {
             String checkPassword = userRegReq.getCheckPassword();
 
             if(!StrUtil.isAllNotEmpty(userAccount,password,checkPassword)){
-                return null;}//判空}
+                //return ResutUtils.error(ErrorCode.PARAMS_NULL);}//判空}
+                throw new BusinessException(ErrorCode.PARAMS_NULL);
+            }
 
 
           Long id =  userService.userRegister(userAccount,password,checkPassword);
 
-            return id;
+            return ResutUtils.success(id);
         }
 
 
 
 
     @PostMapping("/login")//登录
-    public User userLogin(@RequestBody userLoginRequest userLoginReq, HttpServletRequest request)
+    public BaseResponse<User> userLogin(@RequestBody userLoginRequest userLoginReq, HttpServletRequest request)
     {
         if(userLoginReq == null)return null;
 
@@ -76,23 +83,24 @@ public class userController {
 
 
         if(!StrUtil.isAllNotEmpty(userAccount,password)){
-            return null;
+            throw new BusinessException(ErrorCode.PARAMS_NULL);
         }//判空
 
 
-        return  userService.userLogin(userAccount,password,request);
+       User user =   userService.userLogin(userAccount,password,request);
 
-
+        return ResutUtils.success(user);
     }
 
 
     @GetMapping("/current")//获取用户登录状态
-    public User getCurrentUser(HttpServletRequest request)
+    public BaseResponse<User> getCurrentUser(HttpServletRequest request)
     {
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
         if(currentUser == null)
         {
+            //throw new BusinessException(ErrorCode.NOT_LOGIN,"请先登录");
             return null;
         }
 
@@ -108,18 +116,20 @@ public class userController {
 
         User user = userService.getuserSafe(byId);
 
-        return user;
+        return ResutUtils.success(user);
     }
 
 
 
     @GetMapping("/search")//查询
-    public List<User> searchUser( String username,HttpServletRequest request)
+    public BaseResponse<List<User>> searchUser( String username,HttpServletRequest request)
     {
 
         if(!isAdmin(request))
         {
-            return new ArrayList<>();//失败返回空表
+            //List<User> nullList =  new ArrayList<>();//失败返回空表
+           // return ResutUtils.success(nullList);
+            throw new BusinessException(ErrorCode.NO_AUTH);
         }
 
         QueryWrapper<User> Wrapper = new QueryWrapper();
@@ -130,7 +140,9 @@ public class userController {
               //Wrapper.like("username",username);
             List<User> userList =userMapper.selectList(Wrapper);
             log.info("true:{},userList:{}",username,userList);
-            return userList.stream().map(user -> userService.getuserSafe(user)).collect(Collectors.toList());//如果沒有輸入userMapper查询表中所有内容并返回一个object列表
+            List<User> UserList = userList.stream().map(user -> userService.getuserSafe(user)).collect(Collectors.toList());//如果沒有輸入userMapper查询表中所有内容并返回一个object列表
+
+            return ResutUtils.success(UserList);
         }
         else {
             Wrapper.like("userName", username);//模糊查詢
@@ -139,7 +151,8 @@ public class userController {
             List<User> userList = userService.list(Wrapper);
             log.info("else:{},userList:{}",username,userList);
             //遍历userList將關鍵字段置空，重新返回一个脫敏列表
-            return userList.stream().map(user -> userService.getuserSafe(user)).collect(Collectors.toList());
+            List<User> UserList = userList.stream().map(user -> userService.getuserSafe(user)).collect(Collectors.toList());
+            return ResutUtils.success(UserList);
         }
     }
 
@@ -159,14 +172,17 @@ public class userController {
 
 
     @PostMapping("/logout")//登出
-    public boolean userLogout(HttpServletRequest request)
+    public BaseResponse<Boolean> userLogout(HttpServletRequest request)
     {
 
-        if(request==null) return false;
+        if(request==null){
+            //Boolean bl = false;
+             throw new BusinessException(ErrorCode.NO_AUTH,"请先登录");
+        }
 
         HttpSession session = request.getSession(false);
         if(session==null){
-            return false;
+            throw new BusinessException(ErrorCode.NO_AUTH,"请先登录");
         }
         session.removeAttribute(USER_LOGIN_STATE);
         //从定向到index.jsp
@@ -175,7 +191,10 @@ public class userController {
 
         //if(request.getSession().getAttribute(USER_LOGIN_STATE)!=null) {
             request.getSession().invalidate();//使HttpSession失效
-            return true;
+
+        Boolean bl = true;
+
+            return ResutUtils.success(bl);
         //}
        // return false;
     }

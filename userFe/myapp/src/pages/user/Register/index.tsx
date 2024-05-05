@@ -64,14 +64,15 @@ const Register: React.FC = (body: API.LoginParams, options?: { [p: string]: any 
 
     try {
       // 注册
-      const id = await register(values);//传回id号
+      //const id = await register(values);//传回id号
+      const res = await register(values);
 
 
      // const user = await login({ ...values, type });
 
 
       // 登录
-      if (id >= 0) {
+      if (res) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.register.success',
           defaultMessage: '注册成功！',
@@ -80,24 +81,27 @@ const Register: React.FC = (body: API.LoginParams, options?: { [p: string]: any 
         await fetchUserInfo();
         /** 此方法会跳转到 redirect 参数所在的位置 */
         if (!history) return;
-        const { query } = history.location;
-        const { redirect } = query as { redirect: string };
-        history.push(redirect || '/user/login?redirect='+redirect);//注册完跳转回redirect直接请求的页面
-        return;
-      }else {
-        throw new Error (`register error id = ${id}`);
-      }
+       const { query } = history.location;
 
+        history.push({pathname:'/user/login',query});//注册完跳转回请求的页面
+        return;
+      }
+else {
+  throw new Error("注册失败");
+      }
 
       //console.log(id);
       // 如果失败去设置用户错误信息
       //setUserLoginState(msg);
-    } catch (error) {
+    }
+    catch (error : any) {
       const defaultLoginFailureMessage = intl.formatMessage({
-        id: 'pages.login.failure',
-        defaultMessage: '登录失败，请重试！',
+        id: 'pages.register.failure',
+        defaultMessage: '注册失败，请重试！',
       });
-      message.error(defaultLoginFailureMessage);
+
+     // message.error(defaultLoginFailureMessage);
+      console.log(defaultLoginFailureMessage)
     }
   };
   const { status, type: loginType } = userLoginState;

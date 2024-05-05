@@ -2,6 +2,9 @@
 /* eslint-disable */
 
 declare namespace API {
+  /**
+   * 返回类
+   */
   type CurrentUser = {
 
     id : number;//获取id
@@ -12,10 +15,22 @@ declare namespace API {
     accountnumber?: string;//获取账户
     gender?:number;//获取性别
 
-
-
-
   };
+
+
+  /**
+   * 通用返回类
+   */
+  type BaseResponse<T> = {
+
+    code: number;//获取状态码
+    data: T;//获取数据
+    message?: string;//获取消息
+    description?: string;//获取详情说明
+  }
+
+
+
 
   type LoginResult = {
     status?: string;

@@ -17,17 +17,26 @@ export type GlobalHeaderRightProps = {
  * 退出登录，并且将当前的 url 保存
  */
 const loginOut = async () => {
-  await outLogin();
+  try {
+    await outLogin();
+  } catch (error) {
+    console.error('登出时发生错误:', error);
+    // 可以添加更具体的错误处理，如显示错误通知给用户
+  }
   const { query = {}, search, pathname } = history.location;
   const { redirect } = query;
   // Note: There may be security issues, please note
   if (window.location.pathname !== '/user/login' && !redirect) {
-    history.replace({
-      pathname: '/user/login',
-      search: stringify({
-        redirect: pathname + search,
-      }),
-    });
+    if (history) {
+      history.replace({
+        pathname: '/user/login',
+        search: stringify({
+          redirect: pathname + search,
+        }),
+      });
+    } else {
+      console.error('无法获取历史管理器');
+    }
   }
 };
 
@@ -38,7 +47,11 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     (event: MenuInfo) => {
       const { key } = event;
       if (key === 'logout') {
-        setInitialState((s) => ({ ...s, currentUser: undefined }));
+        if (setInitialState) {
+          setInitialState((s) => ({ ...s, currentUser: undefined }));
+        } else {
+          console.error('无法获取 setInitialState 函数');
+        }
         loginOut();
         return;
       }

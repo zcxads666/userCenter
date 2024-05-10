@@ -1,7 +1,6 @@
 # userCenter-悠管用户管理框架
 # 前后端基本完成...
 # 正在完善最后内容
-# ProjectName
 
 ProjectName and Description
 
@@ -22,9 +21,9 @@ ProjectName and Description
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">"完美的"README模板</h3>
+  <h3 align="center">"完美的"README</h3>
   <p align="center">
-    一个"完美的"README模板去快速开始你的项目！
+    一个"完美的"的项目！
     <br />
     <a href="https://github.com/shaojintian/Best_README_template"><strong>探索本项目的文档 »</strong></a>
     <br />

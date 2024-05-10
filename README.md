@@ -18,7 +18,7 @@ ProjectName and Description
 
 <p align="center">
   <a href="https://github.com/shaojintian/Best_README_template/">
-    <img src="https://img2.imgtp.com/2024/05/10/6oTSy5D8.jpg" alt="Logo" width="80" height="80">
+    <img src="https://img2.imgtp.com/2024/05/10/6oTSy5D8.jpg" alt="Logo" width="160" height="160">
   </a>
 
   <h3 align="center">"完美的"README</h3>

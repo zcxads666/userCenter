@@ -104,7 +104,22 @@ filetree
 
 ### 开发的架构 
 
-请阅读[ARCHITECTURE.md](https://github.com/shaojintian/Best_README_template/blob/master/ARCHITECTURE.md) 查阅为该项目的架构。
+## 前端
+
+- 选择Ant Design生态
+- 三件套
+- React框架
+- Ant Design Pro 模板
+- umi开发框架
+- umi Request请求库
+- 正向反向代理
+
+## 后端
+
+- Spring ，SpringMVC ，SpringBoot 框架
+- MyBatis ，MyBatis Plus （不用写sql进行CRUD）数据访问框架
+- MySQL
+- jUnit 单元测试库
 
 ### 部署
 
@@ -173,19 +188,4 @@ xxx@xxxx
 [license-url]: https://github.com/shaojintian/Best_README_template/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/shaojintian
-## 前端
 
-- 选择Ant Design生态
-- 三件套
-- React框架
-- Ant Design Pro 模板
-- umi开发框架
-- umi Request请求库
-- 正向反向代理
-
-## 后端
-
-- Spring ，SpringMVC ，SpringBoot 框架
-- MyBatis ，MyBatis Plus （不用写sql进行CRUD）数据访问框架
-- MySQL
-- jUnit 单元测试库

@@ -23,7 +23,7 @@ ProjectName and Description
 
   <h3 align="center">"完美的"README</h3>
   <p align="center">
-    一个"完美的"的项目！
+    一个"用户管理"的框架！
     <br />
     <a href="https://github.com/shaojintian/Best_README_template"><strong>探索本项目的文档 »</strong></a>
     <br />

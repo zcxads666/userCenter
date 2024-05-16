@@ -21,7 +21,7 @@ ProjectName and Description
     <img src="https://img2.imgtp.com/2024/05/10/6oTSy5D8.jpg" alt="Logo" width="160" height="160">
   </a>
 
-  <h3 align="center">"完美的"开发框架</h3>
+  <h3 align="center">"快速的"开发框架</h3>
   <p align="center">
     一个"用户管理"的框架！
     <br />

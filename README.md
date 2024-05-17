@@ -63,8 +63,8 @@ ProjectName and Description
 
 ###### 开发前的配置要求
 
-1. xxxxx x.x.x
-2. xxxxx x.x.x
+1.
+2.
 
 ###### **安装步骤**
 

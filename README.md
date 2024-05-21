@@ -131,9 +131,8 @@ filetree
 - [xxxxxxx](https://jquery.com)
 - [xxxxxxx](https://laravel.com)
 
-### 贡献者
 
-请阅读**CONTRIBUTING.md** 查阅为该项目做出贡献的开发者。
+
 
 #### 如何参与开源项目
 

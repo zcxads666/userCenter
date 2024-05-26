@@ -171,7 +171,7 @@ xxx@xxxx
 - [Choose an Open Source License](https://choosealicense.com)
 - [GitHub Pages](https://pages.github.com)
 - [Animate.css](https://daneden.github.io/animate.css)
-- [xxxxxxxxxxxxxx](https://connoratherton.com/loaders)
+
 
 <!-- links -->
 [your-project-path]:shaojintian/Best_README_template

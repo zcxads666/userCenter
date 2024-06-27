@@ -94,7 +94,7 @@ filetree
 ├── /static/
 ├── /templates/
 |
-
+|
 
 ```
 

@@ -1,6 +1,6 @@
 # userCenter-悠管用户管理框架
-# 前后端基本完成..
-# 正在完善最后内容
+# 前后端已经完成..
+# 正在完善文档内容
 
 ProjectName and Description
 
